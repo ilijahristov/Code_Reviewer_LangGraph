@@ -1,8 +1,8 @@
 from state import AgentState
 
-def style_agent(state: AgentState) -> str:
+def summary_agent(state: AgentState) -> str:
     """
-    Evaluates the code style of the changes in the pull request.
+    Provides a summary of the code review.
     """
     # For demonstration, we will just return a placeholder string.
     
