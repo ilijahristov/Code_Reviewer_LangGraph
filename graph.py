@@ -1,7 +1,7 @@
 from langgraph.graph import StateGraph, START, END
 
 from state import AgentState
-from tools.github import fetch_pr_data, fetch_node
+from tools.fetch_node import fetch_node
 
 from agents.changes_agent import changes_agent
 from agents.documentation_agent import documentation_agent
