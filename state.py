@@ -10,7 +10,7 @@ class AgentState(TypedDict):
     description: str       
     diff: str            
     files_changed: list  
-    performance_review: str
-    style_review: str
-    summary: str
-    final_report: str
+    changes_agent_summary: str
+    documentation_agent_summary: str
+    test_coverage_agent_summary: str
+    summary_agent_summary: str
