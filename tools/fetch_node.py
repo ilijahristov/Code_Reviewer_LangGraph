@@ -1,4 +1,4 @@
-from github_fetch import fetch_pr_data
+from tools.github_fetch import fetch_pr_data
 
 def fetch_node(state: dict) -> dict:
     """

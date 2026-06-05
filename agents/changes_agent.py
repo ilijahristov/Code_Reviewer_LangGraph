@@ -22,6 +22,6 @@ def changes_agent(state: AgentState) -> str:
     - Files Changed: {state['files_changed']}
     """
     
-    response = model([HumanMessage(content=prompt)])
-    
+    response = model.invoke([HumanMessage(content=prompt)])
+
     return {"changes_agent_summary": response.content}

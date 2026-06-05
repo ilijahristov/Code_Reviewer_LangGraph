@@ -16,5 +16,5 @@ async def review_pr(pr_url: str):
     """
     Endpoint to review a pull request.
     """
-    result = await app.run(pr_url=pr_url)
+    result = await app.ainvoke({"pr_url": pr_url})
     return {"review_summary": result}

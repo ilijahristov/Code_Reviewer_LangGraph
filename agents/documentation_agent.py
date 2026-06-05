@@ -24,6 +24,6 @@ def documentation_agent(state: AgentState) -> str:
     Please provide feedback on whether the documentation is clear, sufficient, and if any improvements are needed.
     """
     
-    response = model([HumanMessage(content=prompt)])
-    
+    response = model.invoke([HumanMessage(content=prompt)])
+
     return {"documentation_agent_summary": response.content}

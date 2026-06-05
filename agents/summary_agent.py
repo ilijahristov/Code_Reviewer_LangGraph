@@ -22,6 +22,6 @@ def summary_agent(state: AgentState) -> str:
     Please provide an overall summary of the pull request review, highlighting any key issues, strengths, or areas for improvement.
     """
     
-    response = model([HumanMessage(content=prompt)])
-    
+    response = model.invoke([HumanMessage(content=prompt)])
+
     return {"summary_agent_review": response.content}
