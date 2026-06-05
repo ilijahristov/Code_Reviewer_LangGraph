@@ -5,11 +5,15 @@ from langchain_core.messages import HumanMessage
 def documentation_agent(state: AgentState) -> str:
     """
     Evaluates the documentation quality of the changes in the pull request.
-    Wether a README or docstring is needed, and if the existing documentation files are clear and sufficient.
     """
+    
     prompt = f"""You are a documentation review agent. 
     Your task is to analyze the changes in a pull request
     and evaluate the quality of the documentation related to those changes.
+    
+    Wether a README or docstring is needed, 
+    and if the existing documentation files are clear and sufficient.
+    And if its up to date with the code changes.
     
     Here is the information about the pull request:
     - PR Title: {state['title']}
