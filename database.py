@@ -33,7 +33,7 @@ async def save_review(state: dict):
         repo_url = state["repo_url"]
         repo_name = repo_url.rstrip("/").split("/")[-1]
 
-        repository_id = await get_or_create_repository(conn, repo_name, repo_url)
+        repository_id = await create_repository(conn, repo_name, repo_url)
 
         pr_url = state["pr_url"]
         pr_number = int(pr_url.rstrip("/").split("/")[-1])
