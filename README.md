@@ -5,7 +5,7 @@ This is a simple app built on LangGraph that takes in a url of a PR request and 
 ## Structure
 
 ```
-FastAPI → fetch_node ─┬→ changes_agent ────uv───┬→ summary_agent → END
+FastAPI → fetch_node ─┬→ changes_agent ───────┬→ summary_agent → END
                       ├→ documentation_agent ─┤
                       └→ test_coverage_agent ─┘
 
