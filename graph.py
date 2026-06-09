@@ -1,6 +1,7 @@
 from langgraph.graph import StateGraph, START, END
 
 from state import AgentState
+from database import get_checkpointer
 from tools.fetch_node import fetch_node
 from tools.db_save_node import save_node
 
@@ -47,4 +48,14 @@ graph.add_edge("test_coverage_agent", "summary_agent")
 graph.add_edge("summary_agent", "db_save_node")
 graph.add_edge("db_save_node", END)
 
-app = graph.compile()
+app = None
+
+
+"""This function initializes the graph and sets up the database checkpointer.
+   Graph gets compiled into a function beacuse of the database checkpointer dependency, which is async.
+   The checkpointer is used to save the state of the graph execution to the database after each node execution.
+"""
+async def build_graph():
+    global app
+    checkpointer = await get_checkpointer()
+    app = graph.compile(checkpointer=checkpointer)

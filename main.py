@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from graph import app as graph
+import graph
 from database import init_pool
 
 
@@ -13,15 +13,17 @@ FastAPI post call -> /review -> app.run() -> graph execution -> returns review s
 
 @asynccontextmanager
 async def lifespan(app):
-    await init_pool()
+    await graph.build_graph()
     yield
 
 app = FastAPI(lifespan=lifespan)
 
 @app.post("/review")
 async def review_pr(pr_url: str):
-    """
-    Endpoint to review a pull request.
-    """
-    result = await graph.ainvoke({"pr_url": pr_url})
-    return {"review_summary": result}
+    import uuid
+    thread_id = str(uuid.uuid4())
+    result = await graph.app.ainvoke(
+        {"pr_url": pr_url},
+        config={"configurable": {"thread_id": thread_id}}
+    )
+    return {"review_summary": result, "thread_id": thread_id}
