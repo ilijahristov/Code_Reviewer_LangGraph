@@ -16,9 +16,9 @@ each node in the graph represents a specific aspect of the code review, such as:
 - Test coverage
 - Overall summary
 
-START → fetch_node ─┬→ changes_agent ──────┬→ summary_agent → END
-                    ├→ documentation_agent ─┤
-                    └→ test_coverage_agent ─┘
+FastAPI → fetch_node ─┬→ changes_agent ────uv───┬→ summary_agent → END
+                      ├→ documentation_agent ─┤
+                      └→ test_coverage_agent ─┘
 
 """
     
