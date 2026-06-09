@@ -55,6 +55,46 @@ async def list_threads(conn):
     return [row["thread_id"] for row in rows]
 
 
+def infer_node(metadata: dict, updated_channels: list) -> str:
+    source = metadata.get("source", "")
+    if source == "input":
+        return "INPUT"
+
+    updated = set(updated_channels)
+    has_branch = any(ch.startswith("branch:to:") for ch in updated)
+
+    if not has_branch:
+        return "db_save_node"
+    if "branch:to:fetch_node" in updated:
+        return "START"
+    if "diff" in updated and "branch:to:changes_agent" in updated:
+        return "fetch_node"
+    if "branch:to:summary_agent" in updated:
+        return "changes_agent / documentation_agent / test_coverage_agent"
+    if "branch:to:db_save_node" in updated:
+        return "summary_agent"
+    return "unknown"
+
+
+def infer_next(history: list) -> list:
+    final = history[0]
+    updated = set(final.checkpoint.get("updated_channels", []))
+    channel_values = final.checkpoint.get("channel_values", {})
+
+    pending_branches = [
+        ch.replace("branch:to:", "")
+        for ch, val in channel_values.items()
+        if ch.startswith("branch:to:") and val is not None
+    ]
+    if pending_branches:
+        return pending_branches
+
+    if "branch:to:db_save_node" in updated or "db_save_node" in infer_node(final.metadata, list(updated)):
+        return ["END"]
+
+    return ["END"]
+
+
 async def inspect_thread(checkpointer: AsyncPostgresSaver, thread_id: str):
     config = {"configurable": {"thread_id": thread_id}}
 
@@ -69,27 +109,22 @@ async def inspect_thread(checkpointer: AsyncPostgresSaver, thread_id: str):
     print(f"Total checkpoints: {len(history)}")
     print(f"{'='*70}")
 
-    for i, checkpoint_tuple in enumerate(reversed(history)):
-        step = i
+    for checkpoint_tuple in reversed(history):
         metadata = checkpoint_tuple.metadata or {}
-        node = metadata.get("source", "unknown")
-        writes = metadata.get("writes")
-        next_nodes = checkpoint_tuple.config.get("configurable", {})
+        step = metadata.get("step", "?")
+        updated = checkpoint_tuple.checkpoint.get("updated_channels", [])
+        node = infer_node(metadata, updated)
 
-        running_node = "START"
-        if writes:
-            running_node = ", ".join(writes.keys())
-
-        print(f"\n--- Step {step}: [{running_node}] ---")
+        print(f"\n--- Step {step}: [{node}] ---")
         print_state(checkpoint_tuple.checkpoint.get("channel_values", {}))
 
     final = history[0]
-    next_nodes = final.next if hasattr(final, "next") and final.next else ["END"]
+    next_nodes = infer_next(history)
     print(f"\n{'='*70}")
     print(f"FINAL STATE (after last checkpoint)")
     print(f"{'='*70}")
     print_state(final.checkpoint.get("channel_values", {}))
-    print(f"\nNext node(s): {list(next_nodes) if next_nodes else ['END']}")
+    print(f"\nNext node(s): {next_nodes}")
 
 
 async def main():

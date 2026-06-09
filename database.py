@@ -37,9 +37,8 @@ async def create_repository(conn, name: str, url: str) -> int:
         """,
         (name, url)
     )
-    row = await conn.fetchone(
-        "SELECT id FROM repositories WHERE url = %s", (url,)
-    )
+    cur = await conn.execute("SELECT id FROM repositories WHERE url = %s", (url,))
+    row = await cur.fetchone()
     return row[0]
 
 async def save_review(state: dict):
