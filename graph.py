@@ -2,6 +2,7 @@ from langgraph.graph import StateGraph, START, END
 
 from state import AgentState
 from tools.fetch_node import fetch_node
+from tools.db_save_node import save_node
 
 from agents.changes_agent import changes_agent
 from agents.documentation_agent import documentation_agent
@@ -31,6 +32,7 @@ graph.add_node("changes_agent", changes_agent)
 graph.add_node("documentation_agent", documentation_agent)
 graph.add_node("test_coverage_agent", test_coverage_agent)
 graph.add_node("summary_agent", summary_agent)
+graph.add_node("db_save_node", save_node)
 
 # edges
 graph.add_edge(START, "fetch_node")
@@ -42,6 +44,7 @@ graph.add_edge("changes_agent", "summary_agent")
 graph.add_edge("documentation_agent", "summary_agent")
 graph.add_edge("test_coverage_agent", "summary_agent")
 
-graph.add_edge("summary_agent", END)
+graph.add_edge("summary_agent", "db_save_node")
+graph.add_edge("db_save_node", END)
 
 app = graph.compile()
