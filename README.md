@@ -16,7 +16,7 @@ A Pull Request URL(ex. https://github.com/owner/repo/pull/pr_id_number) is input
 ### fetch_node.py
 
 This is the Start node of the graph here the job of this node is to get the information about the Pull Request via the Github API. it does so by calling the `fetch_pr_data(pr_url: str)` function inside github_fetch.py, the function returns the populated state:
-```
+```python
 "title": pr.title,
         "description": pr.body or "",
         "author": pr.user.login,
@@ -28,7 +28,7 @@ This is the Start node of the graph here the job of this node is to get the info
 
 The state stores information about the sequence of messages for same session, data fields used by the agents, and the summary returns from the agents themselves
 
-```
+```python
 from typing import TypedDict, Annotated, Sequence
 from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
