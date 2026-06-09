@@ -13,6 +13,7 @@ class AgentState(TypedDict):
     diff: str            
     files_changed: list  
     author: str
+    repo_url: str
     
     # summaries from agents
     changes_agent_summary: str
