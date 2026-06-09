@@ -24,7 +24,7 @@ def fetch_pr_data(pr_url: str) -> dict:
     return {
         "title": pr.title,
         "description": pr.body or "",
-        "author": parts[0],
+        "author": pr.user.login,
         "files_changed": [f.filename for f in pr.get_files()],
         "diff": diff_response.text,
         "repo_url": f"https://github.com/{owner}/{repo_name}"

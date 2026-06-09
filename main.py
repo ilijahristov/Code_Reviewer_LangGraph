@@ -16,9 +16,9 @@ async def lifespan(app):
     await init_pool()
     yield
 
-api = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan)
 
-@api.post("/review")
+@app.post("/review")
 async def review_pr(pr_url: str):
     """
     Endpoint to review a pull request.
