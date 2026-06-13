@@ -2,7 +2,7 @@ from state import AgentState
 from config import model
 from langchain_core.messages import HumanMessage
 
-def documentation_agent(state: AgentState) -> str:
+async def documentation_agent(state: AgentState) -> str:
     """
     Evaluates the documentation quality of the changes in the pull request.
     """
@@ -24,6 +24,6 @@ def documentation_agent(state: AgentState) -> str:
     Please provide feedback on whether the documentation is clear, sufficient, and if any improvements are needed.
     """
     
-    response = model.invoke([HumanMessage(content=prompt)])
+    response = await model.ainvoke([HumanMessage(content=prompt)])
 
     return {"documentation_agent_summary": response.content}

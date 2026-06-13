@@ -2,7 +2,7 @@ from state import AgentState
 from config import model
 from langchain_core.messages import HumanMessage
 
-def summary_agent(state: AgentState) -> str:
+async def summary_agent(state: AgentState) -> str:
     
     """
     End point summary agent that reviews the summaries from the other agents 
@@ -22,6 +22,6 @@ def summary_agent(state: AgentState) -> str:
     Please provide an overall summary of the pull request review, highlighting any key issues, strengths, or areas for improvement.
     """
     
-    response = model.invoke([HumanMessage(content=prompt)])
+    response = await model.ainvoke([HumanMessage(content=prompt)])
 
     return {"summary_agent_review": response.content}

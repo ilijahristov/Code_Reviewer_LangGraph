@@ -2,7 +2,7 @@ from state import AgentState
 from config import model
 from langchain_core.messages import HumanMessage
 
-def changes_agent(state: AgentState) -> str:
+async def changes_agent(state: AgentState) -> str:
     """
     Change Agent
     Detects if the PR changes public APIs, modifies database schemas,
@@ -22,6 +22,6 @@ def changes_agent(state: AgentState) -> str:
     - Files Changed: {state['files_changed']}
     """
     
-    response = model.invoke([HumanMessage(content=prompt)])
+    response = await model.ainvoke([HumanMessage(content=prompt)])
 
     return {"changes_agent_summary": response.content}

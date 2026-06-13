@@ -2,7 +2,7 @@ from state import AgentState
 from config import model
 from langchain_core.messages import HumanMessage
 
-def test_coverage_agent(state: AgentState) -> str:
+async def test_coverage_agent(state: AgentState) -> str:
     """
     Evaluates wether the changes in the pull request have sufficient test coverage, 
     and if the tests are well-designed and comprehensive.
@@ -21,6 +21,6 @@ def test_coverage_agent(state: AgentState) -> str:
     - Files Changed: {state['files_changed']}
     """
     
-    response = model.invoke([HumanMessage(content=prompt)])
+    response = await model.ainvoke([HumanMessage(content=prompt)])
 
     return {"test_coverage_agent_summary": response.content}
