@@ -52,6 +52,9 @@ async def save_review(state: dict):
         pr_url = state["pr_url"]
         pr_number = int(pr_url.rstrip("/").split("/")[-1])
 
+        def _serialize(obj) -> str | None:
+            return obj.model_dump_json() if obj is not None else None
+
         await conn.execute(
             """
             INSERT INTO pr_reviews (
@@ -67,9 +70,9 @@ async def save_review(state: dict):
                 pr_number,
                 state.get("author"),
                 state.get("title"),
-                state.get("changes_agent_summary"),
-                state.get("documentation_agent_summary"),
-                state.get("test_coverage_agent_summary"),
-                state.get("summary_agent_review"),
+                _serialize(state.get("changes_agent_summary")),
+                _serialize(state.get("documentation_agent_summary")),
+                _serialize(state.get("test_coverage_agent_summary")),
+                _serialize(state.get("summary_agent_review")),
             )
         )

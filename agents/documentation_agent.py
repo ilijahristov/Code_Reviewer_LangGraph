@@ -1,29 +1,33 @@
 from state import AgentState
 from config import model
+from models import DocumentationReview
 from langchain_core.messages import HumanMessage
 
-async def documentation_agent(state: AgentState) -> str:
+async def documentation_agent(state: AgentState) -> dict:
     """
     Evaluates the documentation quality of the changes in the pull request.
+    Checks for missing docstrings, README updates, and docs that are out of sync.
     """
-    
-    prompt = f"""You are a documentation review agent. 
-    Your task is to analyze the changes in a pull request
-    and evaluate the quality of the documentation related to those changes.
-    
-    Wether a README or docstring is needed, 
-    and if the existing documentation files are clear and sufficient.
-    And if its up to date with the code changes.
-    
-    Here is the information about the pull request:
+
+    prompt = f"""You are a documentation review agent.
+    Analyze this pull request and evaluate the quality of its documentation.
+
+    Focus on:
+    - New or changed functions/classes that are missing docstrings
+    - Whether the README needs updating to reflect these changes
+    - Existing documentation (docstrings, comments, README sections) that is now
+      out of sync with the new code behavior
+    - Overall clarity and completeness of any documentation that was added
+
+    Pull request information:
     - PR Title: {state['title']}
     - PR Description: {state['description']}
-    - Diff: {state['diff']}
     - Files Changed: {state['files_changed']}
-    
-    Please provide feedback on whether the documentation is clear, sufficient, and if any improvements are needed.
+    - Diff:
+    {state['diff']}
     """
-    
-    response = await model.ainvoke([HumanMessage(content=prompt)])
 
-    return {"documentation_agent_summary": response.content}
+    structured_model = model.with_structured_output(DocumentationReview)
+    response = await structured_model.ainvoke([HumanMessage(content=prompt)])
+
+    return {"documentation_agent_summary": response}
