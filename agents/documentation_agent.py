@@ -23,8 +23,7 @@ async def documentation_agent(state: AgentState) -> dict:
     - PR Title: {state['title']}
     - PR Description: {state['description']}
     - Files Changed: {state['files_changed']}
-    - Diff:
-    {state['diff']}
+    - Diff: {state['diff']}
     """
 
     structured_model = model.with_structured_output(DocumentationReview)

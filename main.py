@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+import uuid
 import graph
 from database import init_pool
 
@@ -20,8 +21,15 @@ app = FastAPI(lifespan=lifespan)
 
 @app.post("/review")
 async def review_pr(pr_url: str):
-    import uuid
     thread_id = str(uuid.uuid4())
+    result = await graph.app.ainvoke(
+        {"pr_url": pr_url},
+        config={"configurable": {"thread_id": thread_id}}
+    )
+    return {"review_summary": result, "thread_id": thread_id}
+
+@app.post("/review/{thread_id}")
+async def continue_review(thread_id: str, pr_url: str):
     result = await graph.app.ainvoke(
         {"pr_url": pr_url},
         config={"configurable": {"thread_id": thread_id}}
