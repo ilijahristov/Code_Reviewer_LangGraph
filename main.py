@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 import uuid
 import graph
-from database import init_pool
+from database import init_pool, list_repositories, get_reviews_by_repo_name
 
 
 
@@ -35,3 +35,17 @@ async def continue_review(thread_id: str, pr_url: str):
         config={"configurable": {"thread_id": thread_id}}
     )
     return {"review_summary": result, "thread_id": thread_id}
+
+
+# --- Read endpoints used by the frontend ---
+
+@app.get("/repositories")
+async def get_repositories():
+    """Sidebar chat list: all repositories that have been reviewed."""
+    return await list_repositories()
+
+
+@app.get("/repositories/{name}/reviews")
+async def get_repository_reviews(name: str):
+    """Chat history for one repository (its reviews, oldest first)."""
+    return await get_reviews_by_repo_name(name)
