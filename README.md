@@ -144,7 +144,7 @@ python inspect_state.py <thread_id>
 It prints a step-by-step breakdown of the graph execution — which node ran at each step and what the state looked like — followed by the final state and what node would run next. Useful for debugging failed or incomplete runs.
 
 
-## Installation & Setup
+## Installation & Setup LangGraph Agent
 ### Prerequisites
 - Python 3.10+
 - A GitHub account with a personal access token
@@ -187,3 +187,23 @@ Send a POST request to the /review endpoint with a GitHub PR URL:
 curl -X POST "http://127.0.0.1:8000/review?pr_url=https://github.com/owner/repo/pull/123"
 ```
 Or open the interactive docs at http://127.0.0.1:8000/docs.
+
+
+## Installation & Setup Frontend
+
+### 1. Clone the repository if you havent from the langgraph installation
+```bash
+git clone https://github.com/your-username/Code_Reviewer_LangGraph.git
+cd Code_Reviewer_LangGraph
+```
+
+### 2. Install modules
+```bash
+cd frontend
+npm install
+```
+
+### 3. Run frontend server
+```bash
+npm run dev
+```
